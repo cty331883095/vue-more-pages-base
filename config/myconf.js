@@ -10,9 +10,9 @@ module.exports = {
 
     },
     build: {
-        htmlPath: '/zaozhuang/',
+        htmlPath: '/testdemo/',
         assetsSubDirectory: 'static',
-        buildingPages: ['index'],
+        buildingPages: ['index', 'index2'],
         assetsRoot: 'dist',
         autoPx2rem: true
     }

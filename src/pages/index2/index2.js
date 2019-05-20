@@ -4,7 +4,7 @@ import router from './router'
 import axiosIns from '@/axios'
 import store from './store'
 
-import 'static/css/reset.css'
+import 'static/css/common.css'
 
 import App from './App'
 Vue.config.productionTip = false

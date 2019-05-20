@@ -5,14 +5,14 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const packageConfig = require('../package.json')
 const myconf = require('../config/myconf')
 
-exports.assetsPath = function(_path) {
+exports.assetsPath = function (_path) {
     const assetsSubDirectory = process.env.NODE_ENV === 'production' ?
         config.build.assetsSubDirectory :
         config.dev.assetsSubDirectory
     return path.posix.join(assetsSubDirectory, _path)
 }
 
-exports.cssLoaders = function(options) {
+exports.cssLoaders = function (options) {
     options = options || {}
 
     const cssLoader = {
@@ -37,7 +37,7 @@ exports.cssLoaders = function(options) {
     }
 
     // generate loader string to be used with extract text plugin
-    function generateLoaders(loader, loaderOptions) {
+    function generateLoaders (loader, loaderOptions) {
         const loaders = [cssLoader]
 
         if (options.usePostCSS) {
@@ -85,7 +85,7 @@ exports.cssLoaders = function(options) {
 }
 
 // Generate loaders for standalone style files (outside of .vue)
-exports.styleLoaders = function(options) {
+exports.styleLoaders = function (options) {
     const output = []
     const loaders = exports.cssLoaders(options)
 
@@ -96,36 +96,35 @@ exports.styleLoaders = function(options) {
             use: loader
         })
     }
-
     return output
 }
 
 exports.createNotifierCallback = () => {
-        const notifier = require('node-notifier')
+    const notifier = require('node-notifier')
 
-        return (severity, errors) => {
-            if (severity !== 'error') return
+    return (severity, errors) => {
+        if (severity !== 'error') return
 
-            const error = errors[0]
-            const filename = error.file && error.file.split('!').pop()
+        const error = errors[0]
+        const filename = error.file && error.file.split('!').pop()
 
-            notifier.notify({
-                title: packageConfig.name,
-                message: severity + ': ' + error.name,
-                subtitle: filename || '',
-                icon: path.join(__dirname, 'logo.png')
-            })
-        }
+        notifier.notify({
+            title: packageConfig.name,
+            message: severity + ': ' + error.name,
+            subtitle: filename || '',
+            icon: path.join(__dirname, 'logo.png')
+        })
     }
-    //glob是webpack安装时依赖的一个第三方模块，该模块允许你使用*等符号,例如lib/*.js就是获取lib文件夹下的所有js后缀名的文件
+}
+//glob是webpack安装时依赖的一个第三方模块，该模块允许你使用*等符号,例如lib/*.js就是获取lib文件夹下的所有js后缀名的文件
 const glob = require('glob')
-    // 页面模板
+// 页面模板
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
-    //取得相应的页面路径，因为之前的配置，所以是src文件夹下的pages文件夹
+//取得相应的页面路径，因为之前的配置，所以是src文件夹下的pages文件夹
 const PAGE_PATH = path.resolve(__dirname, '../src/pages')
-    // 用于做相应的merge处理
+// 用于做相应的merge处理
 const merge = require('webpack-merge')
 
 const PreloadWebpackPligin = require('preload-webpack-plugin')
@@ -137,33 +136,32 @@ const developingPages = process.env.NODE_ENV === 'production' ? myconf.build.bui
 //那么作为入口处理
 
 exports.entries = () => {
-        const entryFiles = glob.sync(PAGE_PATH + '/*/*.js')
-        const map = {}
-            // let developingPages = myconf.dev.developingPages
-        entryFiles.forEach((filePath) => {
-                const filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'))
+    const entryFiles = glob.sync(PAGE_PATH + '/*/*.js')
+    const map = {}
+    // let developingPages = myconf.dev.developingPages
+    entryFiles.forEach((filePath) => {
+        const filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'))
 
-                //该配置项数组非空时按需编译
-                if (!developingPages.length || developingPages.indexOf(filename) > -1) {
-                    //页面添加babel-polyfill用于适配到IE9及以上版本浏览器
-                    map[filename] = filePath
-                }
-            })
-            // map['flexible'] = path.resolve(__dirname, '../static/js/lib/flexible.js')
-
-        return map
-    }
-    //多页面输出配置
-    //与上面的多页面入口配置相同，读取pages文件夹下的对应的html后缀文件，然后放入数组中
+        //该配置项数组非空时按需编译
+        if (!developingPages.length || developingPages.indexOf(filename) > -1) {
+            //页面添加babel-polyfill用于适配到IE9及以上版本浏览器
+            map[filename] = filePath
+        }
+    })
+    map['flexible'] = path.resolve(__dirname, '../static/js/lib/flexible.js')
+    return map
+}
+//多页面输出配置
+//与上面的多页面入口配置相同，读取pages文件夹下的对应的html后缀文件，然后放入数组中
 exports.htmlPlugin = () => {
     const entryHtml = glob.sync(PAGE_PATH + '/*/*.html')
     const arr = []
-        // let developingPages = myconf.dev.developingPages
+    // let developingPages = myconf.dev.developingPages
     entryHtml.forEach((filePath) => {
         const filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'))
 
         if (!developingPages.length || developingPages.indexOf(filename) > -1) {
-            const chunks = ['mainfest', 'flexible', 'vendor', filename]
+            const chunks = ['manifest', 'flexible', 'vendor', filename]
             let conf = {
                 //模板来源
                 template: filePath,
@@ -173,8 +171,7 @@ exports.htmlPlugin = () => {
                 chunks,
                 inject: true,
                 chunksSortMode: (a, b) => chunks.indexOf(a.names[0]) - chunks.indexOf(b.names[0]),
-                title: myconf.dev.htmlPath,
-                // inlineSource: 'manifest.*.(js)$|flexible.js$'
+                title: myconf.dev.htmlPath
             }
             if (process.env.NODE_ENV === 'production') {
                 conf = merge(conf, {
@@ -194,7 +191,7 @@ exports.htmlPlugin = () => {
     arr.push(new PreloadWebpackPligin({
         rel: 'prefetch',
         include: 'asyncChunks',
-        as(entry) {
+        as (entry) {
             if (/\.css$/.test(entry)) return 'style';
             if (/\.woff$/.test(entry)) return 'font';
             if (/\.png$/.test(entry)) return 'image';
