@@ -1,0 +1,39 @@
+{
+  "Print to console": {
+    "prefix": "vue-temp",
+    "body": [
+      "<template>",
+      " <section class='${1:component-name}'>",
+      "   $0",
+      " </section>",
+      "</template>",
+      "",
+      "<script>",
+
+      "export default {",
+      " name: '${1:compont-name}',",
+      " mixins:[],",
+      "components:{},",
+      "props:{},",
+      "computed:{},",
+      "watch:{},",
+      "data () {",
+      "  return {}",
+      "  },",
+      "created () {},",
+      "mounted () {},",
+      "methods () {},",
+      "beforeDestory () {},",
+      "}",
+      "</script>",
+      "  }",
+      "<style lang='less' scoped>",
+      ".${1:component-name}{",
+      "  ",
+      "}",
+      "</style>",
+      ""
+    ],
+    "description": "create vue template"
+  }
+}
